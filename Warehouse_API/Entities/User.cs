@@ -1,4 +1,5 @@
 ﻿using Common.Entities;
+using Warehouse_API.Enums;
 
 namespace Warehouse_API.Entities
 {
@@ -7,6 +8,6 @@ namespace Warehouse_API.Entities
         public string Name { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public string Role { get; set; }
+        public Roles Role { get; set; }
     }
 }
