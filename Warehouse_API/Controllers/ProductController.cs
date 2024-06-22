@@ -58,7 +58,6 @@ namespace Warehouse_API.Controllers
                 CreatedAt = DateTime.Now,
                 CreatedBy = "System",
                 Guid = Guid.NewGuid(),
-                Stock = createProductDto.Stock,
                 UpdatedAt = DateTime.Now,
                 UpdatedBy = "System",
                 Id = 0
@@ -87,7 +86,6 @@ namespace Warehouse_API.Controllers
                 Name = product.Name,
                 Id= id,
                 Price = product.Price,
-                Stock = product.Stock,
                 UpdatedAt = DateTime.Now,
                 UpdatedBy = "System"
             };

@@ -78,7 +78,6 @@ namespace Warehouse_API.Services
                 item.Name = product.Name;
                 item.Price = product.Price;
                 item.Description = product.Description;
-                item.Stock = product.Stock;
                 item.UpdatedAt = DateTime.Now;
                 item.UpdatedBy = "System";
                 await _db.SaveChangesAsync();

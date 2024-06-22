@@ -16,7 +16,6 @@ namespace Warehouse_API.Extensions.Dtos
                 Description = product.Description,
                 Guid = product.Guid,
                 Price = product.Price,
-                Stock = product.Stock,
                 UpdatedAt = product.UpdatedAt,
                 UpdatedBy = product.UpdatedBy
             };
