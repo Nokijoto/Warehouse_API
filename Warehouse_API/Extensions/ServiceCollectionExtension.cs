@@ -15,6 +15,7 @@ namespace Warehouse_API.Extensions
 
             serviceCollection.AddScoped<IProductService, ProductService>();
             serviceCollection.AddScoped<IRfidService,RfidService>();
+            serviceCollection.AddScoped<ILogService, LogService>();
 
 
 

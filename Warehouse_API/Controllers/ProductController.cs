@@ -15,13 +15,14 @@ namespace Warehouse_API.Controllers
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<ProductController> _logger;
         private readonly IProductService _productService;
-
-        public ProductController(ILogger<WeatherForecastController> logger,IProductService productService)
+        private readonly ILogService _logService;
+        public ProductController(ILogger<ProductController> logger,IProductService productService, ILogService logService)
         {
             _logger = logger;
             _productService = productService;
+            _logService = logService;
         }
 
         [HttpGet(Name = "AllProducts"), ]
@@ -30,9 +31,11 @@ namespace Warehouse_API.Controllers
             var products = await _productService.GetProductsAsync();
             if (products == null)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = "Controller Products not found", CreatedAt = DateTime.Now });
                 _logger.LogError("Products not found");
                 return NotFound();
             }
+            _logService.Add(new LogsDto { LogType= "Get", Message = "Controller Products found", CreatedAt = DateTime.Now });
             _logger.LogInformation("Products found");
             return Ok(products);
         }
@@ -43,6 +46,7 @@ namespace Warehouse_API.Controllers
         {
             if (!ModelState.IsValid)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = "Controller Invalid model state", CreatedAt = DateTime.Now });
                 _logger.LogError("Invalid model state");
                 return BadRequest(ModelState);
             }
@@ -59,7 +63,8 @@ namespace Warehouse_API.Controllers
                 UpdatedBy = "System",
                 Id = 0
             };
-            
+
+            _logService.Add(new LogsDto { LogType = "Create", Message = "Controller Product created", CreatedAt = DateTime.Now });
             _logger.LogInformation("Product created");
             return await _productService.CreateProductAsync(product);
         }
@@ -69,6 +74,7 @@ namespace Warehouse_API.Controllers
         {
             if (!ModelState.IsValid)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = "Controller Invalid model state", CreatedAt = DateTime.Now });
                 _logger.LogError("Invalid model state");
                 return BadRequest(ModelState);
             }
@@ -85,6 +91,8 @@ namespace Warehouse_API.Controllers
                 UpdatedAt = DateTime.Now,
                 UpdatedBy = "System"
             };
+
+            _logService.Add(new LogsDto { LogType = "Update", Message = "Controller Product updated", CreatedAt = DateTime.Now });
             _logger.LogInformation("Product updated");
             return await _productService.Update(updatedProduct);
         }
@@ -92,6 +100,7 @@ namespace Warehouse_API.Controllers
         [HttpDelete("{id}"),]
         public async Task<ActionResult<CrudOperationResult<ProductDTO>>> DeleteAsync(int id)
         {
+            _logService.Add(new LogsDto { LogType = "Delete", Message = $"Controller Product {id}deleted", CreatedAt = DateTime.Now });
             _logger.LogInformation("Product deleted");
             return await _productService.Delete(id);
         }
@@ -101,13 +110,15 @@ namespace Warehouse_API.Controllers
         public async Task<ActionResult<CrudOperationResult<ProductDTO>>> GetProductById(int id)
         {
 
-             _logger.LogInformation("Product found");
+            _logService.Add(new LogsDto { LogType = "Get", Message = "Controller Product found", CreatedAt = DateTime.Now });
+            _logger.LogInformation("Product found");
              return await _productService.GetProductById(id);
         }
 
         [HttpGet("guid/{guid}"),]
         public async Task<ActionResult<CrudOperationResult<ProductDTO>>> GetProductByGuid(Guid guid)
         {
+            _logService.Add(new LogsDto { LogType = "Get", Message = "Controller Product found", CreatedAt = DateTime.Now });
             _logger.LogInformation("Product found");
             return await _productService.GetProductByGuid(guid);
         }
@@ -116,7 +127,8 @@ namespace Warehouse_API.Controllers
 
         [HttpGet("rfid/{tag}"),]
         public async Task<ActionResult<CrudOperationResult<ProductDTO>>> GetProductByRfidTag(RFIDTag tag)
-        { 
+        {
+            _logService.Add(new LogsDto { LogType = "Get", Message = "Controller Product found", CreatedAt = DateTime.Now });
             _logger.LogInformation("Product found");
             return await _productService.GetProductByRfidTag(tag);
         }  
