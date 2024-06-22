@@ -10,7 +10,7 @@ namespace Warehouse_API.Entities
         public string Description { get; set; }
         public decimal Price { get; set; }
 
-        public int RFIDTagId { get; set; }
+        public int? RFIDTagId { get; set; }
 
         public RFIDTag RFIDTag { get; set; }
     }

@@ -7,7 +7,7 @@ namespace Warehouse_API.Entities
     public class RFIDTag :BaseEntity
     {
         public string TagNumber { get; set; }
-        public int ProductId { get; set; }
+        public int? ProductId { get; set; }
         public Product Product { get; set; }
     }
 }

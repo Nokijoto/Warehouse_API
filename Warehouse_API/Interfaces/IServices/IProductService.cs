@@ -9,7 +9,7 @@ namespace Warehouse_API.Interfaces.IServices
         public Task<IEnumerable<ProductDTO>> GetProductsAsync();
         public Task<CrudOperationResult<ProductDTO>> GetProductById(int Id);
         public Task<CrudOperationResult<ProductDTO>> GetProductByGuid(Guid guid);
-        public Task<CrudOperationResult<ProductDTO>> GetProductByRfidTag(RFIDTag tag);
+        public Task<CrudOperationResult<ProductDTO>> GetProductByRfidTag(string tag);
         public Task<CrudOperationResult<ProductDTO>> CreateProductAsync(ProductDTO product);
 
         public  Task<CrudOperationResult<ProductDTO>> Update(ProductDTO product);

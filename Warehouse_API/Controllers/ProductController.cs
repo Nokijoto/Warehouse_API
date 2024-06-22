@@ -124,7 +124,7 @@ namespace Warehouse_API.Controllers
 
 
         [HttpGet("rfid/{tag}"),]
-        public async Task<ActionResult<CrudOperationResult<ProductDTO>>> GetProductByRfidTag(RFIDTag tag)
+        public async Task<ActionResult<CrudOperationResult<ProductDTO>>> GetProductByRfidTag(string tag)
         {
             _logService.Add(new LogsDto { LogType = "Get", Message = "Controller Product found", CreatedAt = DateTime.Now });
             _logger.LogInformation("Product found");

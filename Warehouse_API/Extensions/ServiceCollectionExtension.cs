@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SeederLib;
 using System.Text;
+using Warehouse_API.FakeDataGenerator;
 using Warehouse_API.Interfaces;
 using Warehouse_API.Interfaces.IServices;
 using Warehouse_API.Services;
@@ -17,7 +19,8 @@ namespace Warehouse_API.Extensions
             serviceCollection.AddScoped<IRfidService,RfidService>();
             serviceCollection.AddScoped<ILogService, LogService>();
 
-
+            serviceCollection.AddTransient<DataGenerator>();
+         
 
             serviceCollection.AddDbContext<WarehouseDbContext>(options =>
             {
