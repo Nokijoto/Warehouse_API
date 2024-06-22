@@ -60,7 +60,8 @@ namespace Warehouse_API.Controllers
                 Guid = Guid.NewGuid(),
                 UpdatedAt = DateTime.Now,
                 UpdatedBy = "System",
-                Id = 0
+                Id = 0,
+                RFIDTagId = createProductDto.RFIDTagId
             };
 
             _logService.Add(new LogsDto { LogType = "Create", Message = "Controller Product created", CreatedAt = DateTime.Now });
@@ -87,7 +88,8 @@ namespace Warehouse_API.Controllers
                 Id= id,
                 Price = product.Price,
                 UpdatedAt = DateTime.Now,
-                UpdatedBy = "System"
+                UpdatedBy = "System",
+                RFIDTagId = product.RFIDTagId
             };
 
             _logService.Add(new LogsDto { LogType = "Update", Message = "Controller Product updated", CreatedAt = DateTime.Now });

@@ -18,6 +18,7 @@ namespace Warehouse_API.Extensions.Entities
                 Price = product.Price,
                 UpdatedAt = product.UpdatedAt,
                 UpdatedBy = product.UpdatedBy,
+                RFIDTagId = product.RFIDTagId
             };
         }
     }

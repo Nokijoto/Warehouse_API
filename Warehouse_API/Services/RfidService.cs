@@ -125,10 +125,11 @@ namespace Warehouse_API.Services
                 item.UpdatedAt = DateTime.Now;
                 item.UpdatedBy = "System";
                 await _db.SaveChangesAsync();
+                var updatedItem = await _db.RFIDTags.FindAsync(product.Id);
                 _logService.Add(new LogsDto { LogType = "Update", Message = "Tag updated", CreatedAt = DateTime.Now }); 
                 return new CrudOperationResult<RFIDTagDTO>
                 {
-                    Result = product,
+                    Result = updatedItem.ToDto(),
                     Status = CrudOperationResultStatus.Success,
                     Message = "Updated Succesfully"
                 };
@@ -199,10 +200,11 @@ namespace Warehouse_API.Services
                 _logService.Add(new LogsDto { LogType = "Create", Message = "Create tag", CreatedAt = DateTime.Now });
                 await _db.RFIDTags.AddAsync(product.ToEntity());
                 await _db.SaveChangesAsync();
+                var newItem = await _db.RFIDTags.FirstOrDefaultAsync(x => x.Guid == product.Guid);
                 _logService.Add(new LogsDto { LogType = "Create", Message = "Tag created", CreatedAt = DateTime.Now });
                 return new CrudOperationResult<RFIDTagDTO>
                 {
-                    Result = product,
+                    Result = newItem.ToDto(),
                     Status = CrudOperationResultStatus.Success,
                     Message = "Created Succesfully"
                 };

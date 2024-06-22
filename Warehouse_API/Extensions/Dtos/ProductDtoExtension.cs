@@ -17,7 +17,8 @@ namespace Warehouse_API.Extensions.Dtos
                 Guid = product.Guid,
                 Price = product.Price,
                 UpdatedAt = product.UpdatedAt,
-                UpdatedBy = product.UpdatedBy
+                UpdatedBy = product.UpdatedBy,
+                RFIDTagId = product.RFIDTagId
             };
         }
     }

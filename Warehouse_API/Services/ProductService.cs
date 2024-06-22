@@ -37,9 +37,11 @@ namespace Warehouse_API.Services
                 _logService.Equals(new LogsDto { LogType = "Create", Message = "Create product", CreatedAt = DateTime.Now });
                 await _db.Products.AddAsync(product.ToEntity());
                 await _db.SaveChangesAsync();
+                var newItem = await _db.Products.SingleOrDefaultAsync(x => x.Guid == product.Guid);
+               
                 return new CrudOperationResult<ProductDTO>
                 {
-                    Result = product,
+                    Result = newItem.ToDto(),
                     Status = CrudOperationResultStatus.Success,
                     Message = "Created Succesfully"
                 };
@@ -79,13 +81,15 @@ namespace Warehouse_API.Services
                 item.Name = product.Name;
                 item.Price = product.Price;
                 item.Description = product.Description;
+                item.RFIDTagId = product.RFIDTagId;
                 item.UpdatedAt = DateTime.Now;
                 item.UpdatedBy = "System";
                 await _db.SaveChangesAsync();
+                var updatedItem = await _db.Products.FindAsync(product.Id);
                 _logService.Add(new LogsDto { LogType = "Update", Message = "Product updated", CreatedAt = DateTime.Now });
                 return new CrudOperationResult<ProductDTO>
                 {
-                    Result = product,
+                    Result = updatedItem.ToDto(),
                     Status = CrudOperationResultStatus.Success,
                     Message = "Updated Succesfully"
                 };
