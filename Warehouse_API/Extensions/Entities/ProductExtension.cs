@@ -1,13 +1,13 @@
 ﻿using Warehouse_API.Dto;
 using Warehouse_API.Entities;
 
-namespace Warehouse_API.Extensions
+namespace Warehouse_API.Extensions.Entities
 {
-    public static class ProductDtoExtension
+    public static class ProductExtension
     {
-        public static Product ToEntity(this ProductDTO product)
+        public static ProductDTO ToDto(this Product product)
         {
-            return new Product
+            return new ProductDTO
             {
                 Id = product.Id,
                 Name = product.Name,
@@ -18,7 +18,9 @@ namespace Warehouse_API.Extensions
                 Price = product.Price,
                 Stock = product.Stock,
                 UpdatedAt = product.UpdatedAt,
-                UpdatedBy = product.UpdatedBy
+                UpdatedBy = product.UpdatedBy,
+
+
             };
         }
     }

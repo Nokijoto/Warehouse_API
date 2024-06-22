@@ -1,26 +1,21 @@
 ﻿using Warehouse_API.Dto;
 using Warehouse_API.Entities;
 
-namespace Warehouse_API.Extensions
+namespace Warehouse_API.Extensions.Dtos
 {
-    public static class ProductExtension
+    public static class RfidDtoExtension
     {
-        public static ProductDTO ToDto(this Product product)
+        public static RFIDTag ToEntity(this RFIDTagDTO product)
         {
-            return new ProductDTO
+            return new RFIDTag
             {
                 Id = product.Id,
-                Name = product.Name,
                 CreatedAt = product.CreatedAt,
                 CreatedBy = product.CreatedBy,
-                Description = product.Description,
                 Guid = product.Guid,
-                Price = product.Price,
-                Stock = product.Stock,
+                TagNumber = product.TagNumber,
                 UpdatedAt = product.UpdatedAt,
                 UpdatedBy = product.UpdatedBy,
-
-
             };
         }
     }
