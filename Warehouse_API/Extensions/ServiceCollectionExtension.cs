@@ -47,6 +47,15 @@ namespace Warehouse_API.Extensions
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
+
+
+            serviceCollection.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminPolicy", policy => policy.RequireRole("admin"));
+                options.AddPolicy("HRPolicy", policy => policy.RequireRole("Hr"));
+                options.AddPolicy("UserPolicy", policy => policy.RequireRole("user"));
+                options.AddPolicy("SystemPolicy", policy => policy.RequireRole("system"));
+            });
             return serviceCollection;
         }
     }
