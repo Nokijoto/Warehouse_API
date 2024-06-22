@@ -1,8 +1,10 @@
 ﻿using Common.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Policy;
 
 namespace Warehouse_API.Entities
 {
+    [Table("Logs", Schema = "Warehouse")]
     public class Logs
     {
         public string User { get; set; }
