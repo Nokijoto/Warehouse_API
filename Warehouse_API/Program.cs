@@ -4,6 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using Warehouse_API;
+using Warehouse_API.Extensions;
+using Warehouse_API.Interfaces.IServices;
+using Warehouse_API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,28 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 
-builder.Services.AddDbContext<WarehouseDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddWarehouseServices();
 
-var key = Encoding.UTF8.GetBytes("projekt_magazynu_na_inzynierie_oprogramowania_lab");
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = "ABCXYZ",
-        ValidAudience = "http://localhost:51398",
-        IssuerSigningKey = new SymmetricSecurityKey(key)
-    };
-});
+builder.Services.AddAuthenticationCollection();
+
 
 builder.Services.AddAuthorization();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
