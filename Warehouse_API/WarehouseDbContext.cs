@@ -5,7 +5,7 @@ namespace Warehouse_API
 {
     public class WarehouseDbContext : DbContext
     {
-        DbSet<Product> Products { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         public WarehouseDbContext(DbContextOptions<WarehouseDbContext> options) : base(options)
         {
