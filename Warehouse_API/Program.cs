@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using Warehouse_API;
 using Warehouse_API.Extensions;
+using Warehouse_API.FakeDataGenerator;
 using Warehouse_API.Interfaces.IServices;
 using Warehouse_API.Services;
 
@@ -14,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-
+builder.Services.AddScoped<Seeder>();
 builder.Services.AddWarehouseServices();
 
 builder.Services.AddAuthenticationCollection();
@@ -50,6 +51,12 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 var app = builder.Build();
+
+
+var scope = app.Services.CreateScope();
+var seeder = scope.ServiceProvider.GetRequiredService<Seeder>();
+seeder.SeedData();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -17,18 +17,13 @@ namespace Warehouse_API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>()
-            .HasOne(p => p.RFIDTag)
-            .WithOne(rt => rt.Product)
-            .HasForeignKey<RFIDTag>(rt => rt.Id);
+                .HasOne(p => p.RFIDTag)
+                .WithOne(rt => rt.Product)
+                .HasForeignKey<RFIDTag>(rt => rt.ProductId);
 
             modelBuilder.Entity<Product>()
                 .HasIndex(p => p.RFIDTagId)
                 .IsUnique();
-
-            modelBuilder.Entity<RFIDTag>()
-                .HasOne(rt => rt.Product)
-                .WithOne(p => p.RFIDTag)
-                .HasForeignKey<RFIDTag>(rt => rt.ProductId);
         }
     }
 }

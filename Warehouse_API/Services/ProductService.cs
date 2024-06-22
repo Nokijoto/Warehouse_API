@@ -3,6 +3,7 @@ using Common.Enums;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using System;
 using Warehouse_API.Dto;
 using Warehouse_API.Entities;
 using Warehouse_API.Extensions.Dtos;
@@ -214,10 +215,56 @@ namespace Warehouse_API.Services
             }
         }
 
-        public async Task<CrudOperationResult<ProductDTO>> GetProductByRfidTag(RFIDTag tag)
+        public async Task<CrudOperationResult<ProductDTO>> GetProductByRfidTag(string tag)
         {
-            _logService.Add(new LogsDto { LogType = "Get", Message = "Get product by rfid tag", CreatedAt = DateTime.Now });
-            throw new NotImplementedException();
+
+            try
+            {
+                _logService.Add(new LogsDto { LogType = "Get", Message = $"Attempting to get product by RFID tag: {tag}", CreatedAt = DateTime.Now });
+
+                var tagItem = await _db.RFIDTags.SingleOrDefaultAsync(x => x.TagNumber == tag);
+                if (tagItem == null)
+                {
+                    _logService.Add(new LogsDto { LogType = "Error", Message = $"RFID tag not found: {tag}", CreatedAt = DateTime.Now });
+                    return new CrudOperationResult<ProductDTO>
+                    {
+                        Result = null,
+                        Message = "RFID tag not found",
+                        Status = CrudOperationResultStatus.RecordNotFound
+                    };
+                }
+
+                var item = await _db.Products.SingleOrDefaultAsync(x => x.RFIDTagId == tagItem.Id);
+                if (item == null)
+                {
+                    _logService.Add(new LogsDto { LogType = "Error", Message = $"Product not found for RFID tag: {tag}", CreatedAt = DateTime.Now });
+                    return new CrudOperationResult<ProductDTO>
+                    {
+                        Result = null,
+                        Message = "Product not found",
+                        Status = CrudOperationResultStatus.RecordNotFound
+                    };
+                }
+
+                _logService.Add(new LogsDto { LogType = "Get", Message = $"Product found for RFID tag: {tag}", CreatedAt = DateTime.Now });
+
+                return new CrudOperationResult<ProductDTO>
+                {
+                    Result = item.ToDto(),
+                    Status = CrudOperationResultStatus.Success,
+                    Message = "Found successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                _logService.Add(new LogsDto { LogType = "Error", Message = $"Exception occurred: {ex.Message}", CreatedAt = DateTime.Now });
+                return new CrudOperationResult<ProductDTO>
+                {
+                    Result = null,
+                    Message = ex.Message,
+                    Status = CrudOperationResultStatus.Failure
+                };
+            }
         }
     }
 }
