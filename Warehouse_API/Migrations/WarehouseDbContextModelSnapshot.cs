@@ -50,7 +50,7 @@ namespace Warehouse_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Logs");
+                    b.ToTable("Logs", "Warehouse");
                 });
 
             modelBuilder.Entity("Warehouse_API.Entities.Product", b =>
@@ -82,6 +82,9 @@ namespace Warehouse_API.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("RFIDTagId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -91,7 +94,10 @@ namespace Warehouse_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.HasIndex("RFIDTagId")
+                        .IsUnique();
+
+                    b.ToTable("Products", "Warehouse");
                 });
 
             modelBuilder.Entity("Warehouse_API.Entities.RFIDTag", b =>
@@ -112,6 +118,9 @@ namespace Warehouse_API.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.Property<string>("TagNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -125,7 +134,27 @@ namespace Warehouse_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RFIDTags");
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("RFIDTag", "Warehouse");
+                });
+
+            modelBuilder.Entity("Warehouse_API.Entities.RFIDTag", b =>
+                {
+                    b.HasOne("Warehouse_API.Entities.Product", "Product")
+                        .WithOne("RFIDTag")
+                        .HasForeignKey("Warehouse_API.Entities.RFIDTag", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Warehouse_API.Entities.Product", b =>
+                {
+                    b.Navigation("RFIDTag")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
