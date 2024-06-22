@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Protocol.Plugins;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,29 +13,16 @@ namespace Warehouse_API.Controllers
     public class LoginController : ControllerBase
     {
         [HttpPost, Route("login")]
-        public IActionResult Login(LoginDTO loginDTO)
+        public IActionResult Login([FromBody] LoginDTO loginDTO)
         {
             try
             {
                 if (string.IsNullOrEmpty(loginDTO.UserName) ||
                 string.IsNullOrEmpty(loginDTO.Password))
                     return BadRequest("Username and/or Password not specified");
-                if (loginDTO.UserName.Equals("admin") &&
-                loginDTO.Password.Equals("admin123"))
+                if (IsValidUser(loginDTO, out var role))
                 {
-                    var secretKey = new SymmetricSecurityKey
-                    (Encoding.UTF8.GetBytes("projekt_magazynu_na_inzynierie_oprogramowania_lab"));
-                    var signinCredentials = new SigningCredentials
-                    (secretKey, SecurityAlgorithms.HmacSha256);
-                    var jwtSecurityToken = new JwtSecurityToken(
-                        issuer: "ABCXYZ",
-                        audience: "http://localhost:51398",
-                        claims: new List<Claim>(),
-                        expires: DateTime.Now.AddMinutes(10),
-                        signingCredentials: signinCredentials
-                    );
-                   return Ok(new JwtSecurityTokenHandler().
-                    WriteToken(jwtSecurityToken));
+                   return Ok(GenerateJWT(loginDTO.UserName,role));
                 }
             }
             catch(Exception ex)
@@ -43,6 +31,54 @@ namespace Warehouse_API.Controllers
                 ($"An error occurred in generating the token, {ex}");
             }
             return Unauthorized();
+        }
+
+
+        private string GenerateJWT(string username, string role)
+        {
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("projekt_magazynu_na_inzynierie_oprogramowania_lab"));
+            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, username),
+                new Claim(ClaimTypes.Role, role) 
+            };
+
+            var jwtSecurityToken = new JwtSecurityToken(
+                issuer: "ABCXYZ",
+                audience: "http://localhost:51398",
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(10),
+                signingCredentials: signinCredentials
+            );
+            return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+        }
+
+
+        private bool IsValidUser(LoginDTO creditials,out string role)
+        {
+            role = null;
+            if (creditials.UserName == "admin" && creditials.Password == "admin")
+            {
+                role = "admin";
+                return true;
+            }
+            if (creditials.UserName == "string" && creditials.Password == "string")
+            {
+                role = "system";
+                return true;
+            }
+            if (creditials.UserName == "hr" && creditials.Password == "hr")
+            {
+                role = "hr";
+                return true;
+            }
+            if (creditials.UserName == "user" && creditials.Password == "user")
+            {
+                role = "user";
+                return true;
+            }
+            return false;
         }
     }
 }
