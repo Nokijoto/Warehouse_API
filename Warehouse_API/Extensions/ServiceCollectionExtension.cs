@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Warehouse_API.Interfaces;
 using Warehouse_API.Interfaces.IServices;
 using Warehouse_API.Services;
 
@@ -13,6 +14,9 @@ namespace Warehouse_API.Extensions
         {
 
             serviceCollection.AddScoped<IProductService, ProductService>();
+            serviceCollection.AddScoped<IRfidService,RfidService>();
+
+
 
             serviceCollection.AddDbContext<WarehouseDbContext>(options =>
             {

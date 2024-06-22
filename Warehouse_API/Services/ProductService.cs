@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using Warehouse_API.Dto;
 using Warehouse_API.Entities;
-using Warehouse_API.Extensions;
+using Warehouse_API.Extensions.Dtos;
+using Warehouse_API.Extensions.Entities;
 using Warehouse_API.Interfaces.IServices;
 
 namespace Warehouse_API.Services
