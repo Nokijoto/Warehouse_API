@@ -18,8 +18,10 @@ namespace Warehouse_API.Services
         {
             _db = db;
         }
-        public async void Add(LogsDto log)
+        public async Task Add(LogsDto log)
         {
+            log.Guid = Guid.NewGuid();
+            log.User = "NotSpecified";
             await _db.Logs.AddAsync(log.ToEntity());
             await _db.SaveChangesAsync();
 

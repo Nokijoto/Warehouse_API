@@ -5,7 +5,7 @@ namespace Warehouse_API.Interfaces.IServices
 {
     public interface ILogService
     {
-        public void Add(LogsDto log);
+        public Task Add(LogsDto log);
         public Task<IEnumerable<LogsDto>> GetAll();
         public Task<IEnumerable<LogsDto>> GetByDateRange(LogsDto logStart,LogsDto logEnd);
     }
