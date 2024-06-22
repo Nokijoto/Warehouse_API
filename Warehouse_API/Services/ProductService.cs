@@ -14,14 +14,17 @@ namespace Warehouse_API.Services
     public class ProductService : IProductService
     {
         private readonly WarehouseDbContext _db;
+        private readonly ILogService _logService;
 
-        public ProductService(WarehouseDbContext db)
+        public ProductService(WarehouseDbContext db, ILogService logService)
         {
             _db = db;
+            _logService = logService;
         }
 
         public async Task<IEnumerable<ProductDTO>> GetProductsAsync()
         {
+            _logService.Add(new LogsDto { LogType = "Get", Message = "Get all products", CreatedAt = DateTime.Now });
             return await _db.Products.Select(x=>x.ToDto()).ToListAsync();
         }
 
@@ -30,6 +33,7 @@ namespace Warehouse_API.Services
         {
             try
             {
+                _logService.Equals(new LogsDto { LogType = "Create", Message = "Create product", CreatedAt = DateTime.Now });
                 await _db.Products.AddAsync(product.ToEntity());
                 await _db.SaveChangesAsync();
                 return new CrudOperationResult<ProductDTO>
@@ -42,6 +46,7 @@ namespace Warehouse_API.Services
             }
             catch (Exception ex)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = ex.Message, CreatedAt = DateTime.Now });
                 return new CrudOperationResult<ProductDTO> 
                 { 
                     Result = product,
@@ -56,11 +61,13 @@ namespace Warehouse_API.Services
         {
             try
             {
+                _logService.Add(new LogsDto { LogType = "Update", Message = "Update product", CreatedAt = DateTime.Now });
                 var item = await _db.Products.FindAsync(product.Id);
 
 
                 if (item == null)
                 {
+                    _logService.Add(new LogsDto { LogType = "Error", Message = "Product not found", CreatedAt = DateTime.Now });    
                     return new CrudOperationResult<ProductDTO>
                     {
                         Result = product,
@@ -75,6 +82,7 @@ namespace Warehouse_API.Services
                 item.UpdatedAt = DateTime.Now;
                 item.UpdatedBy = "System";
                 await _db.SaveChangesAsync();
+                _logService.Add(new LogsDto { LogType = "Update", Message = "Product updated", CreatedAt = DateTime.Now });
                 return new CrudOperationResult<ProductDTO>
                 {
                     Result = product,
@@ -83,7 +91,8 @@ namespace Warehouse_API.Services
                 };
             }
             catch (Exception ex)
-            {
+            {   
+                _logService.Add(new LogsDto { LogType = "Error", Message = ex.Message, CreatedAt = DateTime.Now });
                 return new CrudOperationResult<ProductDTO>
                 {
                     Result = product,
@@ -98,10 +107,11 @@ namespace Warehouse_API.Services
         public async Task<CrudOperationResult<ProductDTO>> Delete(int id)
         {
             try
-            {
+            {   _logService.Add(new LogsDto { LogType = "Delete", Message = "Delete product", CreatedAt = DateTime.Now });
                 var item = await _db.Products.FindAsync(id);
                 if (item == null)
                 {
+                    _logService.Add(new LogsDto { LogType = "Error", Message = "Product not found", CreatedAt = DateTime.Now });
                     return new CrudOperationResult<ProductDTO>
                     {
                         Result = null,
@@ -111,6 +121,7 @@ namespace Warehouse_API.Services
                 }
                 _db.Products.Remove(item);
                 await _db.SaveChangesAsync();
+                _logService.Add(new LogsDto { LogType = "Delete", Message = "Product deleted", CreatedAt = DateTime.Now });
                 return new CrudOperationResult<ProductDTO>
                 {
                     Result = item.ToDto(),
@@ -120,6 +131,7 @@ namespace Warehouse_API.Services
             }
             catch (Exception ex)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = ex.Message, CreatedAt = DateTime.Now });
                 return new CrudOperationResult<ProductDTO>
                 {
                     Result = null,
@@ -133,9 +145,11 @@ namespace Warehouse_API.Services
         {
             try
             {
+                _logService.Add(new LogsDto { LogType = "Get", Message = "Get product by id", CreatedAt = DateTime.Now });
                 var item = await _db.Products.FindAsync(Id);
                 if (item == null)
                 {
+                    _logService.Add(new LogsDto { LogType = "Error", Message = "Product not found", CreatedAt = DateTime.Now });
                     return new CrudOperationResult<ProductDTO>
                     {
                         Result = null,
@@ -143,6 +157,7 @@ namespace Warehouse_API.Services
                         Status = CrudOperationResultStatus.RecordNotFound
                     };
                 }
+                _logService.Add(new LogsDto { LogType = "Get", Message = "Product found", CreatedAt = DateTime.Now });
                 return new CrudOperationResult<ProductDTO>
                 {
                     Result = item.ToDto(),
@@ -153,6 +168,7 @@ namespace Warehouse_API.Services
             }
             catch(Exception ex)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = ex.Message, CreatedAt = DateTime.Now });
                 return new CrudOperationResult<ProductDTO>
                 {
                     Result = null,
@@ -166,9 +182,11 @@ namespace Warehouse_API.Services
         {
             try
             {
+                _logService.Add(new LogsDto { LogType = "Get", Message = "Get product by guid", CreatedAt = DateTime.Now });
                 var item = await _db.Products.SingleOrDefaultAsync(x => x.Guid == guid);
                 if (item == null)
                 {
+                    _logService.Add(new LogsDto { LogType = "Error", Message = "Product not found", CreatedAt = DateTime.Now });
                     return new CrudOperationResult<ProductDTO>
                     {
                         Result = null,
@@ -176,6 +194,7 @@ namespace Warehouse_API.Services
                         Status = CrudOperationResultStatus.RecordNotFound
                     };
                 }
+                _logService.Add(new LogsDto { LogType = "Get", Message = "Product found", CreatedAt = DateTime.Now });
                 return new CrudOperationResult<ProductDTO>
                 {
                     Result = item.ToDto(),
@@ -186,6 +205,7 @@ namespace Warehouse_API.Services
             }
             catch (Exception ex)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = ex.Message, CreatedAt = DateTime.Now });
                 return new CrudOperationResult<ProductDTO>
                 {
                     Result = null,
@@ -197,6 +217,7 @@ namespace Warehouse_API.Services
 
         public async Task<CrudOperationResult<ProductDTO>> GetProductByRfidTag(RFIDTag tag)
         {
+            _logService.Add(new LogsDto { LogType = "Get", Message = "Get product by rfid tag", CreatedAt = DateTime.Now });
             throw new NotImplementedException();
         }
     }

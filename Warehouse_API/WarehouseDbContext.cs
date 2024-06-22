@@ -7,6 +7,7 @@ namespace Warehouse_API
     {
         public DbSet<Product> Products { get; set; }
         public DbSet<RFIDTag> RFIDTags { get; set; }
+        public DbSet<Logs> Logs { get; set; }
 
         public WarehouseDbContext(DbContextOptions<WarehouseDbContext> options) : base(options)
         {

@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Warehouse_API.Dto;
+using Warehouse_API.Interfaces.IServices;
 
 namespace Warehouse_API.Controllers
 {
@@ -12,14 +13,28 @@ namespace Warehouse_API.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
+        private readonly ILogService _service;
+
+        public LoginController(ILogService service)
+        {
+            _service = service;
+        }
+
         [HttpPost, Route("login")]
-        public IActionResult Login([FromBody] LoginDTO loginDTO)
+        public IActionResult Login([FromBody] LoginDTO loginDTO, ILogService service)
         {
             try
             {
                 if (string.IsNullOrEmpty(loginDTO.UserName) ||
                 string.IsNullOrEmpty(loginDTO.Password))
-                    return BadRequest("Username and/or Password not specified");
+                    _service.Add(new LogsDto
+                    {
+                        CreatedAt = DateTime.Now,
+                        LogType = "Error",
+                        Message = "Username and/or Password not specified",
+                        User = "System"
+                    });
+                return BadRequest("Username and/or Password not specified");
                 if (IsValidUser(loginDTO, out var role))
                 {
                    return Ok(GenerateJWT(loginDTO.UserName,role));
@@ -27,6 +42,13 @@ namespace Warehouse_API.Controllers
             }
             catch(Exception ex)
             {
+                _service.Add(new LogsDto
+                {
+                    CreatedAt = DateTime.Now,
+                    LogType = "Error",
+                    Message = $"Error Generating Token, {ex}",
+                    User = "System"
+                });
                 return BadRequest
                 ($"An error occurred in generating the token, {ex}");
             }

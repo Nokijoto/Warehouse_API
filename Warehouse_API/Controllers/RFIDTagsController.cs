@@ -21,11 +21,13 @@ namespace Warehouse_API.Controllers
     {
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly IRfidService _service;
+        private readonly ILogService _logService;
 
-        public RFIDTagsController(ILogger<WeatherForecastController> logger, IRfidService service)
+        public RFIDTagsController(ILogger<WeatherForecastController> logger, IRfidService service, ILogService logService)
         {
             _logger = logger;
             _service = service;
+            _logService = logService;
         }
 
         [HttpGet(Name = "Alltags"),]
@@ -34,9 +36,11 @@ namespace Warehouse_API.Controllers
             var items = await _service.GetAll();
             if (items == null)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = "Controller Tags not found", CreatedAt = DateTime.Now });
                 _logger.LogError("Tags not found");
                 return NotFound();
             }
+            _logService.Add(new LogsDto { LogType = "Get", Message = "Controller Tags found", CreatedAt = DateTime.Now });
             _logger.LogInformation("Tags found");
             return Ok(items);
         }
@@ -47,6 +51,7 @@ namespace Warehouse_API.Controllers
         {
             if (!ModelState.IsValid)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = "Controller Invalid model state", CreatedAt = DateTime.Now });
                 _logger.LogError("Invalid model state");
                 return BadRequest(ModelState);
             }
@@ -61,6 +66,7 @@ namespace Warehouse_API.Controllers
                 Id = 0
             };
 
+            _logService.Add(new LogsDto { LogType = "Create", Message = "Controller Tag created", CreatedAt = DateTime.Now });
             _logger.LogInformation("Product created");
             return await _service.CreateAsync(newItem);
         }
@@ -70,6 +76,7 @@ namespace Warehouse_API.Controllers
         {
             if (!ModelState.IsValid)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = "Controller Invalid model state", CreatedAt = DateTime.Now });
                 _logger.LogError("Invalid model state");
                 return BadRequest(ModelState);
             }
@@ -83,6 +90,8 @@ namespace Warehouse_API.Controllers
                 UpdatedAt = DateTime.Now,
                 UpdatedBy = "System"
             };
+
+            _logService.Add(new LogsDto { LogType = "Update", Message = "Controller Tag updated", CreatedAt = DateTime.Now });
             _logger.LogInformation("Tag updated");
             return await _service.Update(updatedItem);
         }
@@ -90,6 +99,7 @@ namespace Warehouse_API.Controllers
         [HttpDelete("{id}"),]
         public async Task<ActionResult<CrudOperationResult<RFIDTagDTO>>> DeleteAsync(int id)
         {
+            _logService.Add(new LogsDto { LogType = "Delete", Message = "Controller Tag deleted", CreatedAt = DateTime.Now });
             _logger.LogInformation("Tag deleted");
             return await _service.Delete(id);
         }
@@ -98,7 +108,7 @@ namespace Warehouse_API.Controllers
         [HttpGet("{id}"),]
         public async Task<ActionResult<CrudOperationResult<RFIDTagDTO>>> GetProductById(int id)
         {
-
+            _logService.Add(new LogsDto { LogType = "Get", Message = "Controller Tag found", CreatedAt = DateTime.Now });
             _logger.LogInformation("Tag found");
             return await _service.GetById(id);
         }
@@ -106,6 +116,7 @@ namespace Warehouse_API.Controllers
         [HttpGet("guid/{guid}"),]
         public async Task<ActionResult<CrudOperationResult<RFIDTagDTO>>> GetProductByGuid(Guid guid)
         {
+            _logService.Add(new LogsDto { LogType = "Get", Message = "Controller Tag found", CreatedAt = DateTime.Now });
             _logger.LogInformation("Tag found");
             return await _service.GetByGuid(guid);
         }
@@ -114,6 +125,7 @@ namespace Warehouse_API.Controllers
         [HttpGet("randomTag"),]
         public async Task<ActionResult<CrudOperationResult<RFIDTagDTO>>> RandomTag()
         {
+            _logService.Add(new LogsDto { LogType = "Get", Message = "Generated random Tag number", CreatedAt = DateTime.Now });
             _logger.LogInformation("Generating random tag");
 
             var random = new Random();

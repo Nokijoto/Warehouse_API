@@ -13,14 +13,17 @@ namespace Warehouse_API.Services
     public class RfidService: IRfidService
     {
         private readonly WarehouseDbContext _db;
+        private readonly ILogService _logService;
 
-        public RfidService(WarehouseDbContext db)
+        public RfidService(WarehouseDbContext db, ILogService logService)
         {
             _db = db;
+            _logService = logService;
         }
 
         public async Task<IEnumerable<RFIDTagDTO>> GetAll()
         {
+            _logService.Add(new LogsDto { LogType = "Get", Message = "Get all tags", CreatedAt = DateTime.Now });
             return await _db.RFIDTags.Select(x => x.ToDto()).ToListAsync();
         }
 
@@ -28,9 +31,11 @@ namespace Warehouse_API.Services
         {
             try
             {
+                _logService.Add(new LogsDto { LogType = "Get", Message = "Get tag by guid", CreatedAt = DateTime.Now });    
                 var item = await _db.RFIDTags.SingleOrDefaultAsync(x => x.Guid == guid);
                 if (item == null)
                 {
+                    _logService.Add(new LogsDto { LogType = "Error", Message = "Tag not found", CreatedAt = DateTime.Now });
                     return new CrudOperationResult<RFIDTagDTO>
                     {
                         Result = null,
@@ -38,6 +43,7 @@ namespace Warehouse_API.Services
                         Status = CrudOperationResultStatus.RecordNotFound
                     };
                 }
+                _logService.Add(new LogsDto { LogType = "Get", Message = "Tag found", CreatedAt = DateTime.Now });
                 return new CrudOperationResult<RFIDTagDTO>
                 {
                     Result = item.ToDto(),
@@ -48,6 +54,7 @@ namespace Warehouse_API.Services
             }
             catch (Exception ex)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = ex.Message, CreatedAt = DateTime.Now });
                 return new CrudOperationResult<RFIDTagDTO>
                 {
                     Result = null,
@@ -62,9 +69,11 @@ namespace Warehouse_API.Services
         {
             try
             {
+                _logService.Add(new LogsDto { LogType = "Get", Message = "Get tag by id", CreatedAt = DateTime.Now });
                 var item = await _db.RFIDTags.FindAsync(Id);
                 if (item == null)
                 {
+                    _logService.Add(new LogsDto { LogType = "Error", Message = "Product not found", CreatedAt = DateTime.Now });
                     return new CrudOperationResult<RFIDTagDTO>
                     {
                         Result = null,
@@ -72,6 +81,7 @@ namespace Warehouse_API.Services
                         Status = CrudOperationResultStatus.RecordNotFound
                     };
                 }
+                _logService.Add(new LogsDto { LogType = "Get", Message = "Product found", CreatedAt = DateTime.Now });
                 return new CrudOperationResult<RFIDTagDTO>
                 {
                     Result = item.ToDto(),
@@ -82,6 +92,7 @@ namespace Warehouse_API.Services
             }
             catch (Exception ex)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = ex.Message, CreatedAt = DateTime.Now });
                 return new CrudOperationResult<RFIDTagDTO>
                 {
                     Result = null,
@@ -95,11 +106,14 @@ namespace Warehouse_API.Services
         {
             try
             {
+                _logService.Add(new LogsDto { LogType = "Update", Message = "Update tag", CreatedAt = DateTime.Now });
                 var item = await _db.RFIDTags.FindAsync(product.Id);
 
 
                 if (item == null)
                 {
+
+                    _logService.Add(new LogsDto { LogType = "Error", Message = "Product not found", CreatedAt = DateTime.Now });
                     return new CrudOperationResult<RFIDTagDTO>
                     {
                         Result = product,
@@ -111,6 +125,7 @@ namespace Warehouse_API.Services
                 item.UpdatedAt = DateTime.Now;
                 item.UpdatedBy = "System";
                 await _db.SaveChangesAsync();
+                _logService.Add(new LogsDto { LogType = "Update", Message = "Tag updated", CreatedAt = DateTime.Now }); 
                 return new CrudOperationResult<RFIDTagDTO>
                 {
                     Result = product,
@@ -120,6 +135,7 @@ namespace Warehouse_API.Services
             }
             catch (Exception ex)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = ex.Message, CreatedAt = DateTime.Now });
                 return new CrudOperationResult<RFIDTagDTO>
                 {
                     Result = product,
@@ -135,9 +151,12 @@ namespace Warehouse_API.Services
         {
             try
             {
+                _logService.Add(new LogsDto { LogType = "Delete", Message = "Delete tag", CreatedAt = DateTime.Now });  
                 var item = await _db.RFIDTags.FindAsync(id);
                 if (item == null)
                 {
+
+                    _logService.Add(new LogsDto { LogType = "Error", Message = "Product not found", CreatedAt = DateTime.Now });    
                     return new CrudOperationResult<RFIDTagDTO>
                     {
                         Result = null,
@@ -147,6 +166,8 @@ namespace Warehouse_API.Services
                 }
                 _db.RFIDTags.Remove(item);
                 await _db.SaveChangesAsync();
+
+                _logService.Add(new LogsDto { LogType = "Delete", Message = "Tag deleted", CreatedAt = DateTime.Now });
                 return new CrudOperationResult<RFIDTagDTO>
                 {
                     Result = item.ToDto(),
@@ -155,7 +176,8 @@ namespace Warehouse_API.Services
                 };
             }
             catch (Exception ex)
-            {
+            {   
+                _logService.Add(new LogsDto { LogType = "Error", Message = ex.Message, CreatedAt = DateTime.Now });
                 return new CrudOperationResult<RFIDTagDTO>
                 {
                     Result = null,
@@ -174,8 +196,10 @@ namespace Warehouse_API.Services
         {
             try
             {
+                _logService.Add(new LogsDto { LogType = "Create", Message = "Create tag", CreatedAt = DateTime.Now });
                 await _db.RFIDTags.AddAsync(product.ToEntity());
                 await _db.SaveChangesAsync();
+                _logService.Add(new LogsDto { LogType = "Create", Message = "Tag created", CreatedAt = DateTime.Now });
                 return new CrudOperationResult<RFIDTagDTO>
                 {
                     Result = product,
@@ -186,6 +210,7 @@ namespace Warehouse_API.Services
             }
             catch (Exception ex)
             {
+                _logService.Add(new LogsDto { LogType = "Error", Message = ex.Message, CreatedAt = DateTime.Now });
                 return new CrudOperationResult<RFIDTagDTO>
                 {
                     Result = product,
