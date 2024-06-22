@@ -19,8 +19,6 @@ namespace Warehouse_API.Extensions.Entities
                 Stock = product.Stock,
                 UpdatedAt = product.UpdatedAt,
                 UpdatedBy = product.UpdatedBy,
-
-
             };
         }
     }

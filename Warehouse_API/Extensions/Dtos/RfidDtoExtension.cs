@@ -5,17 +5,17 @@ namespace Warehouse_API.Extensions.Dtos
 {
     public static class RfidDtoExtension
     {
-        public static RFIDTag ToEntity(this RFIDTagDTO product)
+        public static RFIDTag ToEntity(this RFIDTagDTO item)
         {
             return new RFIDTag
             {
-                Id = product.Id,
-                CreatedAt = product.CreatedAt,
-                CreatedBy = product.CreatedBy,
-                Guid = product.Guid,
-                TagNumber = product.TagNumber,
-                UpdatedAt = product.UpdatedAt,
-                UpdatedBy = product.UpdatedBy,
+                Id = item.Id,
+                CreatedAt = item.CreatedAt,
+                CreatedBy = item.CreatedBy,
+                Guid = item.Guid,
+                TagNumber = item.TagNumber,
+                UpdatedAt = item.UpdatedAt,
+                UpdatedBy = item.UpdatedBy,
             };
         }
     }

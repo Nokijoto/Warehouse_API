@@ -3,19 +3,19 @@ using Warehouse_API.Entities;
 
 namespace Warehouse_API.Extensions.Entities
 {
-    public static class RfidExtension
+    public static class RFIDTagExtension
     {
-        public static RFIDTagDTO ToEntity(this RFIDTag product)
+        public static RFIDTagDTO ToDto(this RFIDTag item)
         {
             return new RFIDTagDTO
             {
-                Id = product.Id,
-                CreatedAt = product.CreatedAt,
-                CreatedBy = product.CreatedBy,
-                Guid = product.Guid,
-                TagNumber = product.TagNumber,
-                UpdatedAt = product.UpdatedAt,
-                UpdatedBy = product.UpdatedBy,
+                Id = item.Id,
+                CreatedAt = item.CreatedAt,
+                CreatedBy = item.CreatedBy,
+                Guid = item.Guid,
+                TagNumber = item.TagNumber,
+                UpdatedAt = item.UpdatedAt,
+                UpdatedBy = item.UpdatedBy,
             };
         }
     }
