@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Warehouse_API.Dto;
+using Warehouse_API.Extensions.Dtos;
 using Warehouse_API.Interfaces.IServices;
 
 namespace Warehouse_API.Controllers
@@ -30,13 +31,11 @@ namespace Warehouse_API.Controllers
             return Ok(logs);
         }
 
-        [HttpGet("/byDate", Name = "GetByDate")]
-        public async Task<IActionResult> GetLogsByDate([FromBody] DateTime startDate,DateTime endDate)
+        [HttpPatch("/byDate", Name = "GetByDate")]
+        public async Task<IActionResult> GetLogsByDate([FromBody] DateRange range)
         {
-            var startLog = new LogsDto { CreatedAt= startDate};
-            var endLog = new LogsDto { CreatedAt= endDate};
 
-            var log = await _service.GetByDateRange(startLog,endLog);
+            var log = await _service.GetByDateRange(range);
             if (log == null)
             {
                 _logger.LogError("Log not found");

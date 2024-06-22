@@ -18,12 +18,12 @@ namespace Warehouse_API.Services
         {
             _db = db;
         }
-        public async Task Add(LogsDto log)
+        public void Add(LogsDto log)
         {
             log.Guid = Guid.NewGuid();
             log.User = "NotSpecified";
-            await _db.Logs.AddAsync(log.ToEntity());
-            await _db.SaveChangesAsync();
+             _db.Logs.Add(log.ToEntity());
+             _db.SaveChanges();
 
         }
         public async Task<IEnumerable<LogsDto>> GetAll()
@@ -31,9 +31,9 @@ namespace Warehouse_API.Services
             return await _db.Logs.Select(x => x.ToDto()).ToListAsync();
         }
 
-        public async Task<IEnumerable<LogsDto>> GetByDateRange(LogsDto logStart, LogsDto logEnd)
+        public async Task<IEnumerable<LogsDto>> GetByDateRange(DateRange range)
         {
-            return await _db.Logs.Where(x => x.CreatedAt >= logStart.CreatedAt && x.CreatedAt <= logEnd.CreatedAt).Select(x => x.ToDto()).ToListAsync();
+            return await _db.Logs.Where(x => x.CreatedAt >= range.StartDate && x.CreatedAt <= range.EndDate).Select(x => x.ToDto()).ToListAsync();
         }
     }
 }
