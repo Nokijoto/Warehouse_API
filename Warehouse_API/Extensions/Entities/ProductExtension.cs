@@ -1,4 +1,5 @@
 ﻿using Warehouse_API.Dto;
+using Warehouse_API.Dto.CreationsDto;
 using Warehouse_API.Entities;
 
 namespace Warehouse_API.Extensions.Entities
@@ -19,6 +20,16 @@ namespace Warehouse_API.Extensions.Entities
                 UpdatedAt = product.UpdatedAt,
                 UpdatedBy = product.UpdatedBy,
                 RFIDTagId = product.RFIDTagId
+            };
+        }
+
+        public static RaportDto ToRaportDto(this Product product)
+        {
+            return new RaportDto
+            {
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price
             };
         }
     }

@@ -1,5 +1,7 @@
 ﻿using Common.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Warehouse_API.Dto;
+using Warehouse_API.Dto.CreationsDto;
 using Warehouse_API.Entities;
 
 namespace Warehouse_API.Interfaces.IServices
@@ -14,5 +16,7 @@ namespace Warehouse_API.Interfaces.IServices
 
         public  Task<CrudOperationResult<ProductDTO>> Update(ProductDTO product);
         public Task<CrudOperationResult<ProductDTO>> Delete(int id);
+
+        public Task<CrudOperationResult<IEnumerable<RaportDto>>> GetRaport();
     }
 }

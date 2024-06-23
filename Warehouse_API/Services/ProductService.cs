@@ -1,10 +1,13 @@
-﻿using Common.Dto;
+﻿using Azure;
+using Common.Dto;
 using Common.Enums;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using System;
 using Warehouse_API.Dto;
+using Warehouse_API.Dto.CreationsDto;
 using Warehouse_API.Entities;
 using Warehouse_API.Extensions.Dtos;
 using Warehouse_API.Extensions.Entities;
@@ -263,6 +266,44 @@ namespace Warehouse_API.Services
             {
                 _logService.Add(new LogsDto { LogType = "Error", Message = $"Exception occurred: {ex.Message}", CreatedAt = DateTime.Now });
                 return new CrudOperationResult<ProductDTO>
+                {
+                    Result = null,
+                    Message = ex.Message,
+                    Status = CrudOperationResultStatus.Failure
+                };
+            }
+        }
+
+        public async Task<CrudOperationResult<IEnumerable<RaportDto>>> GetRaport()
+        {
+            try
+            {
+                _logService.Add(new LogsDto
+                {
+                    LogType = "Get",
+                    Message = "Generate Raport",
+                    CreatedAt = DateTime.Now
+                });
+
+                var items = await _db.Products.Select(x => x.ToRaportDto()).ToListAsync();
+
+                return new CrudOperationResult<IEnumerable<RaportDto>>
+                {
+                    Result = items,
+                    Status = CrudOperationResultStatus.Success,
+                    Message = "Found successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                _logService.Add(new LogsDto
+                {
+                    LogType = "Error",
+                    Message = $"Exception occurred: {ex.Message}",
+                    CreatedAt = DateTime.Now
+                });
+
+                return new CrudOperationResult<IEnumerable<RaportDto>>
                 {
                     Result = null,
                     Message = ex.Message,
