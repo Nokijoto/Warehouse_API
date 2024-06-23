@@ -21,12 +21,13 @@ namespace Warehouse_API.Controllers
         }
 
         [HttpPost, Route("login")]
-        public IActionResult Login([FromBody] LoginDTO loginDTO, ILogService service)
+        public IActionResult Login([FromBody] LoginDTO loginDTO)
         {
             try
             {
                 if (string.IsNullOrEmpty(loginDTO.UserName) ||
                 string.IsNullOrEmpty(loginDTO.Password))
+                {
                     _service.Add(new LogsDto
                     {
                         CreatedAt = DateTime.Now,
@@ -34,11 +35,14 @@ namespace Warehouse_API.Controllers
                         Message = "Username and/or Password not specified",
                         User = "System"
                     });
-                return BadRequest("Username and/or Password not specified");
+                    return BadRequest("Username and/or Password not specified");
+                }
+                   
                 if (IsValidUser(loginDTO, out var role))
                 {
                    return Ok(GenerateJWT(loginDTO.UserName,role));
                 }
+                return  BadRequest("Wrong Username and/or Password");
             }
             catch(Exception ex)
             {

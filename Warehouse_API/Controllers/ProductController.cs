@@ -25,7 +25,10 @@ namespace Warehouse_API.Controllers
             _logService = logService;
         }
 
-        [HttpGet(Name = "AllProducts"), ]
+        [HttpGet(Name = "AllProducts")]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> GetProducts()
         {
             var products = await _productService.GetProductsAsync();
@@ -41,7 +44,10 @@ namespace Warehouse_API.Controllers
         }
 
 
-        [HttpPost, ]
+        [HttpPost]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult<CrudOperationResult<ProductDTO>>> CreateProductAsync([FromBody] CreateProductDto createProductDto)
         {
             if (!ModelState.IsValid)
@@ -69,7 +75,10 @@ namespace Warehouse_API.Controllers
             return await _productService.CreateProductAsync(product);
         }
 
-        [HttpPatch("{id}"),]
+        [HttpPatch("{id}")]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult<CrudOperationResult<ProductDTO>>> UpdateProductAsync([FromBody] CreateProductDto product,int id)
         {
             if (!ModelState.IsValid)
@@ -97,7 +106,10 @@ namespace Warehouse_API.Controllers
             return await _productService.Update(updatedProduct);
         }
 
-        [HttpDelete("{id}"),]
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult<CrudOperationResult<ProductDTO>>> DeleteAsync(int id)
         {
             _logService.Add(new LogsDto { LogType = "Delete", Message = $"Controller Product {id}deleted", CreatedAt = DateTime.Now });
@@ -106,7 +118,10 @@ namespace Warehouse_API.Controllers
         }
 
 
-        [HttpGet("{id}"),]
+        [HttpGet("{id}")]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult<CrudOperationResult<ProductDTO>>> GetProductById(int id)
         {
 
@@ -115,7 +130,10 @@ namespace Warehouse_API.Controllers
              return await _productService.GetProductById(id);
         }
 
-        [HttpGet("guid/{guid}"),]
+        [HttpGet("guid/{guid}")]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult<CrudOperationResult<ProductDTO>>> GetProductByGuid(Guid guid)
         {
             _logService.Add(new LogsDto { LogType = "Get", Message = "Controller Product found", CreatedAt = DateTime.Now });
@@ -125,7 +143,10 @@ namespace Warehouse_API.Controllers
 
 
 
-        [HttpGet("rfid/{tag}"),]
+        [HttpGet("rfid/{tag}")]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult<CrudOperationResult<ProductDTO>>> GetProductByRfidTag(string tag)
         {
             _logService.Add(new LogsDto { LogType = "Get", Message = "Controller Product found", CreatedAt = DateTime.Now });

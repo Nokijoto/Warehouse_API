@@ -56,7 +56,7 @@ namespace Warehouse_API.Extensions
             serviceCollection.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminPolicy", policy => policy.RequireRole("admin"));
-                options.AddPolicy("HRPolicy", policy => policy.RequireRole("Hr"));
+                options.AddPolicy("HRPolicy", policy => policy.RequireRole("hr"));
                 options.AddPolicy("UserPolicy", policy => policy.RequireRole("user"));
                 options.AddPolicy("SystemPolicy", policy => policy.RequireRole("system"));
             });

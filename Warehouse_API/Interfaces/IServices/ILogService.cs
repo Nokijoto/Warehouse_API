@@ -1,6 +1,5 @@
 ﻿using Common.Dto;
 using Warehouse_API.Dto;
-using Warehouse_API.Extensions.Dtos;
 
 namespace Warehouse_API.Interfaces.IServices
 {

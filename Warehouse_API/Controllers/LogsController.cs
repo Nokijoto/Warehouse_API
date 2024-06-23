@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Warehouse_API.Dto;
-using Warehouse_API.Extensions.Dtos;
 using Warehouse_API.Interfaces.IServices;
 
 namespace Warehouse_API.Controllers
@@ -9,16 +9,19 @@ namespace Warehouse_API.Controllers
     [ApiController]
     public class LogsController : Controller
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<LogsController> _logger;
         private readonly ILogService _service;
 
-        public LogsController(ILogger<WeatherForecastController> logger, ILogService service)
+        public LogsController(ILogger<LogsController> logger, ILogService service)
         {
             _logger = logger;
             _service = service;
         }
 
         [HttpGet(Name = "/all")]
+        [Authorize(Policy = "AdminPolicy")]
+        [Authorize(Policy = "HRPolicy")]
+        [Authorize(Policy = "SystemPolicy")]
         public async Task<IActionResult> GetLogs()
         {
             var logs = await _service.GetAll();
@@ -32,6 +35,9 @@ namespace Warehouse_API.Controllers
         }
 
         [HttpPatch("/byDate", Name = "GetByDate")]
+        [Authorize(Policy= "AdminPolicy")]
+        [Authorize(Policy = "HRPolicy")]
+        [Authorize(Policy = "SystemPolicy")]
         public async Task<IActionResult> GetLogsByDate([FromBody] DateRange range)
         {
 

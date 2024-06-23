@@ -12,25 +12,31 @@ using Warehouse_API.Dto;
 using Warehouse_API.Entities;
 using Warehouse_API.Interfaces.IServices;
 using Common.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Warehouse_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+
+    
     public class RFIDTagsController : Controller
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<RFIDTagDTO> _logger;
         private readonly IRfidService _service;
         private readonly ILogService _logService;
 
-        public RFIDTagsController(ILogger<WeatherForecastController> logger, IRfidService service, ILogService logService)
+        public RFIDTagsController(ILogger<RFIDTagDTO> logger, IRfidService service, ILogService logService)
         {
             _logger = logger;
             _service = service;
             _logService = logService;
         }
 
-        [HttpGet(Name = "Alltags"),]
+        [HttpGet(Name = "Alltags")]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<IActionResult> GetAll()
         {
             var items = await _service.GetAll();
@@ -46,7 +52,10 @@ namespace Warehouse_API.Controllers
         }
 
 
-        [HttpPost,]
+        [HttpPost]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult<CrudOperationResult<RFIDTagDTO>>> CreateAsync([FromBody] CreateRFIDDto item)
         {
             if (!ModelState.IsValid)
@@ -71,7 +80,10 @@ namespace Warehouse_API.Controllers
             return await _service.CreateAsync(newItem);
         }
 
-        [HttpPatch("{id}"),]
+        [HttpPatch("{id}")]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult<CrudOperationResult<RFIDTagDTO>>> UpdateAsync([FromBody] CreateRFIDDto item, int id)
         {
             if (!ModelState.IsValid)
@@ -96,7 +108,10 @@ namespace Warehouse_API.Controllers
             return await _service.Update(updatedItem);
         }
 
-        [HttpDelete("{id}"),]
+        [HttpDelete("{id}")]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult<CrudOperationResult<RFIDTagDTO>>> DeleteAsync(int id)
         {
             _logService.Add(new LogsDto { LogType = "Delete", Message = "Controller Tag deleted", CreatedAt = DateTime.Now });
@@ -105,16 +120,22 @@ namespace Warehouse_API.Controllers
         }
 
 
-        [HttpGet("{id}"),]
-        public async Task<ActionResult<CrudOperationResult<RFIDTagDTO>>> GetProductById(int id)
+        [HttpGet("{id}")]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<ActionResult<CrudOperationResult<RFIDTagDTO>>> GetById(int id)
         {
             _logService.Add(new LogsDto { LogType = "Get", Message = "Controller Tag found", CreatedAt = DateTime.Now });
             _logger.LogInformation("Tag found");
             return await _service.GetById(id);
         }
 
-        [HttpGet("guid/{guid}"),]
-        public async Task<ActionResult<CrudOperationResult<RFIDTagDTO>>> GetProductByGuid(Guid guid)
+        [HttpGet("guid/{guid}")]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
+        public async Task<ActionResult<CrudOperationResult<RFIDTagDTO>>> GetByGuid(Guid guid)
         {
             _logService.Add(new LogsDto { LogType = "Get", Message = "Controller Tag found", CreatedAt = DateTime.Now });
             _logger.LogInformation("Tag found");
@@ -122,7 +143,10 @@ namespace Warehouse_API.Controllers
         }
 
 
-        [HttpGet("randomTag"),]
+        [HttpGet("randomTag")]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
         public async Task<ActionResult<CrudOperationResult<RFIDTagDTO>>> RandomTag()
         {
             _logService.Add(new LogsDto { LogType = "Get", Message = "Generated random Tag number", CreatedAt = DateTime.Now });

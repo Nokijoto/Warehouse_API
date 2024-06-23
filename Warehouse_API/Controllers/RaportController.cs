@@ -1,5 +1,6 @@
 ﻿using Common.Dto;
 using Common.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Warehouse_API.Dto.CreationsDto;
 using Warehouse_API.Interfaces.IServices;
@@ -20,6 +21,10 @@ namespace Warehouse_API.Controllers
 
 
         [HttpGet("inventory")]
+        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "UserPolicy")]
+        [Authorize(Policy = "AdminPolicy")]
+        [Authorize(Policy = "HRPolicy")]
         public async Task<ActionResult<CrudOperationResult<IEnumerable<RaportDto>>>> GetInventoryReport()
         {
             var report = await _productService.GetRaport();
