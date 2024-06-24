@@ -21,10 +21,7 @@ namespace Warehouse_API.Controllers
 
 
         [HttpGet("inventory")]
-        [Authorize(Policy = "SystemPolicy")]
-        [Authorize(Policy = "UserPolicy")]
-        [Authorize(Policy = "AdminPolicy")]
-        [Authorize(Policy = "HRPolicy")]
+        [Authorize(Policy = "AdminHRUserSystemPolicy")]
         public async Task<ActionResult<CrudOperationResult<IEnumerable<RaportDto>>>> GetInventoryReport()
         {
             var report = await _productService.GetRaport();

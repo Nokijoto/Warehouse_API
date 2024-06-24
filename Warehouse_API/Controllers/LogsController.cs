@@ -19,9 +19,7 @@ namespace Warehouse_API.Controllers
         }
 
         [HttpGet(Name = "/all")]
-        [Authorize(Policy = "AdminPolicy")]
-        [Authorize(Policy = "HRPolicy")]
-        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy = "AdminHRSystemPolicy")]
         public async Task<IActionResult> GetLogs()
         {
             var logs = await _service.GetAll();
@@ -35,9 +33,7 @@ namespace Warehouse_API.Controllers
         }
 
         [HttpPatch("/byDate", Name = "GetByDate")]
-        [Authorize(Policy= "AdminPolicy")]
-        [Authorize(Policy = "HRPolicy")]
-        [Authorize(Policy = "SystemPolicy")]
+        [Authorize(Policy= "AdminHRSystemPolicy")]
         public async Task<IActionResult> GetLogsByDate([FromBody] DateRange range)
         {
 

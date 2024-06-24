@@ -59,6 +59,21 @@ namespace Warehouse_API.Extensions
                 options.AddPolicy("HRPolicy", policy => policy.RequireRole("hr"));
                 options.AddPolicy("UserPolicy", policy => policy.RequireRole("user"));
                 options.AddPolicy("SystemPolicy", policy => policy.RequireRole("system"));
+
+                options.AddPolicy("AdminHRPolicy", policy => policy.RequireRole("admin", "hr"));
+                options.AddPolicy("AdminUserPolicy", policy => policy.RequireRole("admin", "user"));
+                options.AddPolicy("AdminSystemPolicy", policy => policy.RequireRole("admin", "system"));
+                options.AddPolicy("HRUserPolicy", policy => policy.RequireRole("hr", "user"));
+                options.AddPolicy("HRSystemPolicy", policy => policy.RequireRole("hr", "system"));
+                options.AddPolicy("UserSystemPolicy", policy => policy.RequireRole("user", "system"));
+
+                options.AddPolicy("AdminHRUserPolicy", policy => policy.RequireRole("admin", "hr", "user"));
+                options.AddPolicy("AdminHRSystemPolicy", policy => policy.RequireRole("admin", "hr", "system"));
+                options.AddPolicy("AdminUserSystemPolicy", policy => policy.RequireRole("admin", "user", "system"));
+                options.AddPolicy("HRUserSystemPolicy", policy => policy.RequireRole("hr", "user", "system"));
+
+                options.AddPolicy("AdminHRUserSystemPolicy", policy => policy.RequireRole("admin", "hr", "user", "system"));
+
             });
             return serviceCollection;
         }

@@ -15,10 +15,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+
+builder.Services.AddAuthenticationCollection(); 
+
+
 builder.Services.AddScoped<Seeder>();
 builder.Services.AddWarehouseServices();
 
-builder.Services.AddAuthenticationCollection();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
